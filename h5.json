@@ -1,0 +1,18 @@
+{
+    "name": "h5-js-css3",
+    "desc": "一个七夕场景动画",
+    "type": "h5",
+	"port":"3030",
+	"group":"SmartUED",
+	"src":"true",
+	"version":"0.0.1",
+	"config":"http://ued.qiuge.me/SmartUED/h5-js-css3/0.0.1/config.js",
+    "author": {
+        "name": "beth",
+        "email": "gemeiwangji789@qq.com"
+    },
+	"repository": {
+        "type": "git",
+        "url": "https://github.com/SmartUED/h5-js-css3"
+    }
+}
