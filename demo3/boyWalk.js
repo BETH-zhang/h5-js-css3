@@ -12,7 +12,7 @@ function BoyWalk() {
     // 获取数据
     var getValue = function(className) {
         var $elem = $('' + className + '');
-            // 走路的路线坐标
+        // 走路的路线坐标
         return {
             height: $elem.height(),
             top: $elem.position().top
@@ -84,8 +84,8 @@ function BoyWalk() {
     return {
         // 开始走路
         walkTo: function(time, proportionX, proportionY) {
-            var distX = calculateDist('x', proportionX)
-            var distY = calculateDist('y', proportionY)
+            var distX = calculateDist('x', proportionX);
+            var distY = calculateDist('y', proportionY);
             return walkRun(time, distX, distY);
         },
         // 停止走路
@@ -93,7 +93,7 @@ function BoyWalk() {
             pauseWalk();
         },
         setColoer:function(value){
-            $boy.css('background-color',value)
+            $boy.css('background-color',value);
         }
     }
 }

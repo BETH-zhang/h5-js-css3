@@ -20,6 +20,46 @@ button {
     position: absolute;
     bottom: 0;
 }
+
+
+/*-------- 太阳自转以及动画 --------*/
+
+#sun {
+    background: url("http://img.mukewang.com/55ade004000106c202010201.png") no-repeat;
+    position: absolute;
+    z-index: 1;
+    top: -30px;
+    height: 201px;
+    width: 201px;
+    right: 40%;
+}
+
+.rotation {
+    -webkit-animation-name: rotation;
+    -webkit-animation-duration: 30s;
+    -moz-animation-name: rotation;
+    -moz-animation-duration: 30s;
+}
+
+@-webkit-keyframes rotation {
+    /*？*/
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(-2000px) translateY(400px);
+    }
+}
+
+@-moz-keyframes rotation {
+    /*？*/
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(-2000px) translateY(400px);
+    }
+}
 </style>
 
 <body>
@@ -32,6 +72,8 @@ button {
                     <div class="a_background_middle"></div>
                     <div class="a_background_botton"></div>
                 </div>
+                <!-- 太阳 -->
+                <div id="sun"></div>
             </li>
             <!-- 第二副画面 -->
             <li> 页面2 </li>
@@ -48,11 +90,11 @@ button {
 
         var container = $("#content");
         var swipe = Swipe(container);
-        
+
         // 页面滚动到指定的位置
         function scrollTo(time, proportionX) {
             var distX = container.width() * proportionX;
-            swipe.scrollTo(distX, time);
+            swipe.scrollTop(distX, time);
         }
 
         ////////////////////////////////////////////////////////
@@ -66,8 +108,11 @@ button {
 
         // 开始
         $("button:first").click(function() {
+            
+            // 太阳公转
+            $("#sun").addClass('rotation');
 
-             // 开始第一次走路
+            // 开始第一次走路
             boy.walkTo(2000, 0.2)
                 .then(function() {
                     // 第一次走路完成
