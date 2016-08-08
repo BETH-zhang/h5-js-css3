@@ -22,42 +22,81 @@ button {
 }
 
 
-/*-------- 太阳自转以及动画 --------*/
+/* 天空云 */
 
-#sun {
-    background: url("http://img.mukewang.com/55ade004000106c202010201.png") no-repeat;
+.cloud {
+    z-index: 2;
     position: absolute;
-    z-index: 1;
-    top: -30px;
-    height: 201px;
-    width: 201px;
-    right: 40%;
 }
 
-.rotation {
-    -webkit-animation-name: rotation;
+.cloud1 {
+    width: 181px;
+    height: 101px;
+    left: -5%;
+    top: 15%;
+    background: url("../resource/images/cloud1.png");
+}
+
+.cloud2 {
+    width: 301px;
+    height: 140px;
+    right: -5%;
+    background: url("../resource/images/cloud2.png");
+}
+
+.cloud1Anim {
+    -webkit-animation-name: smallCloud;
     -webkit-animation-duration: 30s;
-    -moz-animation-name: rotation;
+    -webkit-animation-iteration: infinite;
+    -moz-animation-name: smallCloud;
     -moz-animation-duration: 30s;
+    -moz-animation-iteration: infinite;
 }
 
-@-webkit-keyframes rotation {
+.cloud2Anim {
+    -webkit-animation-name: largeCloud;
+    -webkit-animation-duration: 60s;
+    -webkit-animation-iteration: infinite;
+    -moz-animation-name: largeCloud;
+    -moz-animation-duration: 60s;
+    -moz-animation-iteration: infinite;
+}
+
+@-webkit-keyframes smallCloud {
     /*？*/
     0% {
-        transform: translateX(0) translateY(0);
+        left: -5%;
     }
     100% {
-        transform: translateX(-2000px) translateY(400px);
+        left: 100%;
     }
 }
 
-@-moz-keyframes rotation {
+@-moz-keyframes smallCloud {
     /*？*/
     0% {
-        transform: translateX(0) translateY(0);
+        left: -5%;
     }
     100% {
-        transform: translateX(-2000px) translateY(400px);
+        left: 100%;
+    }
+}
+
+@-webkit-keyframes largeCloud {
+    0% {
+        right: -5%;
+    }
+    100% {
+        right: 100%;
+    }
+}
+
+@-moz-keyframes largeCloud {
+    0% {
+        right: -5%;
+    }
+    100% {
+        right: 100%;
     }
 }
 </style>
@@ -67,10 +106,16 @@ button {
         <ul class='content-wrap'>
             <!-- 第一副画面 -->
             <li>
+                <!-- 背景 -->
                 <div class="a_background">
                     <div class="a_background_top"></div>
                     <div class="a_background_middle"></div>
                     <div class="a_background_botton"></div>
+                </div>
+                <!-- 云 -->
+                <div class="cloudArea">
+                    <div class="cloud cloud1"></div>
+                    <div class="cloud cloud2"></div>
                 </div>
                 <!-- 太阳 -->
                 <div id="sun"></div>
@@ -108,9 +153,13 @@ button {
 
         // 开始
         $("button:first").click(function() {
-            
+
             // 太阳公转
             $("#sun").addClass('rotation');
+
+            // 飘云
+            $(".cloud:first").addClass('cloud1Anim');
+            $(".cloud:last").addClass('cloud2Anim');
 
             // 开始第一次走路
             boy.walkTo(2000, 0.2)

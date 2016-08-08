@@ -47,7 +47,7 @@ a {
 }
 
 .charector {
-    background: url(http://img.mukewang.com/55ade248000198ae10550582.png) -0px -291px no-repeat;
+    background: url(../resource/images/boy.png) -0px -291px no-repeat;
     width: 151px;
     height: 291px;
     position: absolute;
@@ -102,5 +102,45 @@ a {
     }
     100% {
         background-position: -0px -291px;
+    }
+}
+
+
+/*-------- 太阳自转以及动画 --------*/
+
+#sun {
+    background: url("../resource/images/sun.png") no-repeat;
+    position: absolute;
+    z-index: 1;
+    top: -30px;
+    height: 201px;
+    width: 201px;
+    right: 40%;
+}
+
+.rotation {
+    -webkit-animation-name: rotation;
+    -webkit-animation-duration: 30s;
+    -moz-animation-name: rotation;
+    -moz-animation-duration: 30s;
+}
+
+@-webkit-keyframes rotation {
+    /*？*/
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(-2000px) translateY(400px);
+    }
+}
+
+@-moz-keyframes rotation {
+    /*？*/
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(-2000px) translateY(400px);
     }
 }
