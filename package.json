@@ -17,10 +17,5 @@
   "dependencies": {
     "jquery": "^3.0.0",
     "jquery.transit": "^0.9.12"
-  },
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-imagemin": "^3.0.1",
-    "imagemin-pngquant": "^5.0.0"
   }
 }
