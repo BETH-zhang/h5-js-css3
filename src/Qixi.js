@@ -187,6 +187,7 @@
            // 走进商店
            function walkToShop(runTime) {
                var defer = $.Deferred();
+               console.log('defer', defer);
                var doorObj = $('.door')
                // 门的坐标
                var offsetDoor = doorObj.offset();
@@ -257,6 +258,7 @@
                },
                // 走进商店
                toShop: function() {
+                console.log('arguments', arguments);
                    return walkToShop.apply(null, arguments);
                },
                // 走出商店
