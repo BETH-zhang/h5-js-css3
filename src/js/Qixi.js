@@ -1,33 +1,56 @@
+function Hmlt5Audio(url, loop) {
+    var audio = new Audio(url);
+
+    return { 
+        start: function(){
+            audio.autoplay = true;
+            audio.loop = loop || false;
+            audio.play();
+        },
+        stop: function(){
+            audio.pause(); 
+            audio.currentTime = 0.0; 
+        },
+        end: function(callback) { 
+            audio.addEventListener("ended", function() { 
+                callback() 
+            }, false) 
+        }
+    } 
+}
+
+var confi = { 
+    keepZoomRatio: false, 
+    layer: { "width": "100%", "height": "100%", "top": 0, "left": 0 }, 
+    audio: { 
+        enable: true, 
+        playURl: "./music/happy.wav", 
+        cycleURL: "./music/circulation.wav" 
+    }, 
+    setTime: { 
+        walkToThird: 6000, 
+        walkToMiddle: 6500, 
+        walkToEnd: 6500, 
+        walkTobridge: 2000, 
+        bridgeWalk: 2000, 
+        walkToShop: 1500, 
+        walkOutShop: 1500, 
+        openDoorTime: 800, 
+        shutDoorTime: 500, 
+        waitRotate: 850, 
+        waitFlower: 800 
+    }, 
+    snowflakeURl: [
+        "./images/snowflake/snowflake1.png",
+        "./images/snowflake/snowflake2.png",
+        "./images/snowflake/snowflake3.png",
+        "./images/snowflake/snowflake4.png",
+        "./images/snowflake/snowflake5.png",
+        "./images/snowflake/snowflake6.png"
+    ]};
+var audio1 = Hmlt5Audio(confi.audio.playURl);
+
 var Qixi = function() {
-    var confi = { 
-        keepZoomRatio: false, 
-        layer: { "width": "100%", "height": "100%", "top": 0, "left": 0 }, 
-        audio: { 
-            enable: true, 
-            playURl: "./music/happy.wav", 
-            cycleURL: "./music/circulation.wav" 
-        }, 
-        setTime: { 
-            walkToThird: 6000, 
-            walkToMiddle: 6500, 
-            walkToEnd: 6500, 
-            walkTobridge: 2000, 
-            bridgeWalk: 2000, 
-            walkToShop: 1500, 
-            walkOutShop: 1500, 
-            openDoorTime: 800, 
-            shutDoorTime: 500, 
-            waitRotate: 850, 
-            waitFlower: 800 
-        }, 
-        snowflakeURl: [
-            "./images/snowflake/snowflake1.png",
-            "./images/snowflake/snowflake2.png",
-            "./images/snowflake/snowflake3.png",
-            "./images/snowflake/snowflake4.png",
-            "./images/snowflake/snowflake5.png",
-            "./images/snowflake/snowflake6.png"
-        ]};
     var debug = 0;
     if (debug) { 
         $.each(confi.setTime, function(key, val) { 
@@ -57,11 +80,15 @@ var Qixi = function() {
 
     var pathY = function() {
         var data = getValue(".a_background_middle");
-        return data.top + data.height / 2 }();
+        console.log('pathY', data.top + data.height / 2 );
+        return data.top + data.height / 2 
+    }();
 
     var bridgeY = function() {
         var data = getValue(".c_background_middle");
-        return data.top }();
+        console.log('bridgeY', data.top);
+        return data.top 
+    }();
 
     var animationEnd = (function() {
         var explorer = navigator.userAgent;
@@ -72,7 +99,7 @@ var Qixi = function() {
     })();
 
     if (confi.audio.enable) {
-        var audio1 = Hmlt5Audio(confi.audio.playURl);
+        audio1.start();
         audio1.end(function() { 
             Hmlt5Audio(confi.audio.cycleURL, true) 
         }) 
@@ -340,19 +367,7 @@ var Qixi = function() {
         }, 200) 
     }
 
-    function Hmlt5Audio(url, loop) {
-        var audio = new Audio(url);
-        audio.autoplay = true;
-        audio.loop = loop || false;
-        audio.play();
-        return { 
-            end: function(callback) { 
-                audio.addEventListener("ended", function() { 
-                    callback() 
-                }, false) 
-            } 
-        } 
-    }
+    
 };
 
 $(function() { 
