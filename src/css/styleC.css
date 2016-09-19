@@ -338,6 +338,7 @@
     width: 185px;
     height: 81px;
     background-image: url(../images/logo.png);
+    background-size: cover;
     z-index: 999999;
     position: absolute;
     left: 50%;
