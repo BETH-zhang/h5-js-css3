@@ -1,9 +1,15 @@
 var Qixi = function() {
+    // 基本配置
     var confi = { 
         keepZoomRatio: false, 
-        layer: { "width": "100%", "height": "100%", "top": 0, "left": 0 }, 
+        layer: { 
+            "width": "100%", 
+            "height": "100%", 
+            "top": 0, 
+            "left": 0 
+        }, 
         audio: { 
-            enable: true, 
+            enable: false, 
             playURl: "./music/happy.wav", 
             cycleURL: "./music/circulation.wav" 
         }, 
@@ -28,25 +34,30 @@ var Qixi = function() {
             "./images/snowflake/snowflake5.png",
             "./images/snowflake/snowflake6.png"
         ]};
-    var debug = 0;
+    var debug = 1;
+    // 循环时间
     if (debug) { 
         $.each(confi.setTime, function(key, val) { 
-            confi.setTime[key] = 500 
+            confi.setTime[key] = 2000 
         }) 
     }
+    // 保持比例缩放
     if (confi.keepZoomRatio) {
         var proportionY = 900 / 1440;
         var screenHeight = $(document).height();
         var zooomHeight = screenHeight * proportionY;
         var zooomTop = (screenHeight - zooomHeight) / 2;
         confi.layer.height = zooomHeight;
-        confi.layer.top = zooomTop }
-    var instanceX;
-    var container = $("#content");
-    container.css(confi.layer);
-    var visualWidth = container.width();
-    var visualHeight = container.height();
+        confi.layer.top = zooomTop 
+    }
+    var instanceX; // 间距
+    var container = $("#content"); // 内容容器
+    container.css(confi.layer); // 设置页面布局
 
+    var visualWidth = container.width(); // 获取可视范围宽度
+    var visualHeight = container.height(); // 获取可视范围高度
+
+    // 获取元素的高度，和top值
     var getValue = function(className) {
         var $elem = $("" + className + "");
         return { 
@@ -55,14 +66,19 @@ var Qixi = function() {
         } 
     };
 
+    // 获取路的Y轴路径
     var pathY = function() {
         var data = getValue(".a_background_middle");
-        return data.top + data.height / 2 }();
+        return data.top + data.height / 2 
+    }();
 
+    // 获取桥的Y轴路径
     var bridgeY = function() {
         var data = getValue(".c_background_middle");
-        return data.top }();
+        return data.top 
+    }();
 
+    // 获取动画结束
     var animationEnd = (function() {
         var explorer = navigator.userAgent;
         if (~explorer.indexOf("WebKit")) {
@@ -71,23 +87,32 @@ var Qixi = function() {
         return "animationend" 
     })();
 
+    // 播放音乐
     if (confi.audio.enable) {
         var audio1 = Hmlt5Audio(confi.audio.playURl);
         audio1.end(function() { 
             Hmlt5Audio(confi.audio.cycleURL, true) 
         }) 
     }
+
+    // 初始化场景布局
     var swipe = Swipe(container);
 
+    // 调试，切换场景
+    swipe.scrollTo(visualWidth*2);
+
+    // 滚动，场景滚动
     function scrollTo(time, proportionX) {
         var distX = visualWidth * proportionX;
         swipe.scrollTo(distX, time) 
     }
 
+    // 女孩定义
     var girl = {
         elem: $(".girl"),
         getHeight: function() {
-            return this.elem.height() },
+            return this.elem.height() 
+        },
         rotate: function() {
             this.elem.addClass("girl-rotate")
         },
@@ -105,6 +130,7 @@ var Qixi = function() {
         }
     };
 
+    // 鸟的定义
     var bird = { 
         elem: $(".bird"), 
         fly: function() { 
@@ -115,6 +141,7 @@ var Qixi = function() {
         } 
     };
 
+    // logo定义
     var logo = { 
         elem: $(".logo"), 
         run: function() { 
@@ -124,54 +151,29 @@ var Qixi = function() {
         } 
     };
 
-    var boy = BoyWalk();
-
-    boy.walkTo(
-        confi.setTime.walkToThird, 0.6).then(function() { 
-            scrollTo(confi.setTime.walkToMiddle, 1);
-        return boy.walkTo(confi.setTime.walkToMiddle, 0.5) 
-
-    }).then(function() { 
-        bird.fly() 
-    }).then(function() { 
-        boy.stopWalk();
-        return BoyToShop(boy) 
-    }).then(function() { 
-        girl.setOffset();
-        scrollTo(confi.setTime.walkToEnd, 2);
-        return boy.walkTo(confi.setTime.walkToEnd, 0.15) 
-    }).then(function() {
-        return boy.walkTo(confi.setTime.walkTobridge, 0.25, (bridgeY - girl.getHeight()) / visualHeight) 
-    }).then(function() {
-        var proportionX = (girl.getOffset().left - boy.getWidth() - instanceX + girl.getWidth() / 5) / visualWidth;
-        return boy.walkTo(confi.setTime.bridgeWalk, proportionX) 
-    }).then(function() { boy.resetOriginal();
-        setTimeout(function() { 
-            girl.rotate();
-            boy.rotate(function() { 
-                logo.run();
-                snowflake() 
-            }) }, confi.setTime.waitRotate) 
-    });
-
+    // 定义男孩走路
     function BoyWalk() {
         var $boy = $("#boy");
         var boyWidth = $boy.width();
         var boyHeight = $boy.height();
         $boy.css({ top: pathY - boyHeight + 25 });
 
+        // 停止走路
         function pauseWalk() { 
             $boy.addClass("pauseWalk") 
         }
 
+        // 重新走路
         function restoreWalk() { 
             $boy.removeClass("pauseWalk") 
         }
 
+        // 慢走路
         function slowWalk() { 
             $boy.addClass("slowWalk") 
         }
 
+        // 开始跑步
         function stratRun(options, runTime) {
             var dfdPlay = $.Deferred();
             restoreWalk();
@@ -181,12 +183,14 @@ var Qixi = function() {
             return dfdPlay 
         }
 
+        // 走路跑
         function walkRun(time, dist, disY) { time = time || 3000;
             slowWalk();
             var d1 = stratRun({ "left": dist + "px", "top": disY ? disY : undefined }, time);
             return d1 
         }
 
+        // 走路进商店
         function walkToShop(doorObj, runTime) {
             var defer = $.Deferred();
             var doorObj = $(".door");
@@ -201,6 +205,7 @@ var Qixi = function() {
             return defer
         }
 
+        // 走路出商店
         function walkOutShop(runTime) {
             var defer = $.Deferred();
             restoreWalk();
@@ -211,6 +216,7 @@ var Qixi = function() {
             return defer 
         }
 
+        // 计算距离
         function calculateDist(direction, proportion) {
             return (direction == "x" ? visualWidth : visualHeight) * proportion 
         }
@@ -220,15 +226,19 @@ var Qixi = function() {
                 var distX = calculateDist("x", proportionX);
                 var distY = calculateDist("y", proportionY);
                 return walkRun(time, distX, distY) 
-            }, stopWalk: function() { 
+            }, 
+            stopWalk: function() { 
                 pauseWalk() 
-            }, resetOriginal: function() { 
+            }, 
+            resetOriginal: function() { 
                 this.stopWalk();
                 $boy.removeClass("slowWalk slowFlolerWalk").addClass("boyOriginal") }, toShop: function() {
                 return walkToShop.apply(null, arguments) 
-            }, outShop: function() {
+            }, 
+            outShop: function() {
                 return walkOutShop.apply(null, arguments) 
-            }, rotate: function(callback) { 
+            }, 
+            rotate: function(callback) { 
                 restoreWalk();
                 $boy.addClass("boy-rotate");
                 if (callback) { 
@@ -237,21 +247,27 @@ var Qixi = function() {
                         $(this).off() 
                     }) 
                 } 
-            }, getWidth: function() {
+            }, 
+            getWidth: function() {
                 return $boy.width() 
-            }, getDistance: function() {
+            }, 
+            getDistance: function() {
                 return $boy.offset().left 
-            }, talkFlower: function() { 
+            }, 
+            talkFlower: function() { 
                     $boy.addClass("slowFlolerWalk") 
-                } 
-            }
+            } 
+        }
     }
+
+    // 男孩进商店
     var BoyToShop = function(boyObj) {
         var defer = $.Deferred();
         var $door = $(".door");
         var doorLeft = $(".door-left");
         var doorRight = $(".door-right");
 
+        // 门动作
         function doorAction(left, right, time) {
             var defer = $.Deferred();
             var count = 2;
@@ -263,17 +279,23 @@ var Qixi = function() {
             doorRight.transition({ "left": right }, time, complete);
             return defer }
 
+        // 开门
         function openDoor(time) {
             return doorAction("-50%", "100%", time) }
 
+        // 关门
         function shutDoor(time) {
             return doorAction("0%", "50%", time) }
 
+        // 抱花
         function talkFlower() {
             var defer = $.Deferred();
             boyObj.talkFlower();
-            setTimeout(function() { defer.resolve() }, confi.setTime.waitFlower);
-            return defer }
+            setTimeout(function() { 
+                defer.resolve() 
+            }, confi.setTime.waitFlower);
+            return defer 
+        }
         var lamp = {
             elem: $(".b_background"),
             bright: function() {
@@ -284,27 +306,32 @@ var Qixi = function() {
             }
         };
         var waitOpen = openDoor(confi.setTime.openDoorTime);
-        waitOpen.then(function() { 
+
+        waitOpen.then(function() {
             lamp.bright();
             return boyObj.toShop($door, confi.setTime.walkToShop) 
         }).then(function() {
-            return talkFlower() 
+            return talkFlower()
         }).then(function() {
             return boyObj.outShop(confi.setTime.walkOutShop) 
-        }).then(function() { shutDoor(confi.setTime.shutDoorTime);
+        }).then(function() { 
+            shutDoor(confi.setTime.shutDoorTime);
             lamp.dark();
             defer.resolve() 
         });
         return defer
     };
 
+    // 雪花
     function snowflake() {
         var $flakeContainer = $("#snowflake");
 
+        // 得到图片名字
         function getImagesName() {
             return confi.snowflakeURl[[Math.floor(Math.random() * 6)]] 
         }
 
+        // 创建雪花盒子
         function createSnowBox() {
             var url = getImagesName();
             return $('<div class="snowbox" />').css({ 
@@ -318,6 +345,7 @@ var Qixi = function() {
             }).addClass("snowRoll") 
         }
 
+        // 定时
         setInterval(function() {
             var startPositionLeft = Math.random() * visualWidth - 100,
                 startOpacity = 1;
@@ -340,6 +368,7 @@ var Qixi = function() {
         }, 200) 
     }
 
+    // h5音频
     function Hmlt5Audio(url, loop) {
         var audio = new Audio(url);
         audio.autoplay = true;
@@ -357,4 +386,34 @@ var Qixi = function() {
 
 $(function() { 
     Qixi() 
+    // 初始化男孩走路
+    // var boy = BoyWalk();
+
+    // boy.walkTo(
+    //     confi.setTime.walkToThird, 0.6).then(function() { 
+    //         scrollTo(confi.setTime.walkToMiddle, 1);
+    //     return boy.walkTo(confi.setTime.walkToMiddle, 0.5) 
+
+    // }).then(function() { 
+    //     bird.fly() 
+    // }).then(function() { 
+    //     boy.stopWalk();
+    //     return BoyToShop(boy) 
+    // }).then(function() { 
+    //     girl.setOffset();
+    //     scrollTo(confi.setTime.walkToEnd, 2);
+    //     return boy.walkTo(confi.setTime.walkToEnd, 0.15) 
+    // }).then(function() {
+    //     return boy.walkTo(confi.setTime.walkTobridge, 0.25, (bridgeY - girl.getHeight()) / visualHeight) 
+    // }).then(function() {
+    //     var proportionX = (girl.getOffset().left - boy.getWidth() - instanceX + girl.getWidth() / 5) / visualWidth;
+    //     return boy.walkTo(confi.setTime.bridgeWalk, proportionX) 
+    // }).then(function() { boy.resetOriginal();
+    //     setTimeout(function() { 
+    //         girl.rotate();
+    //         boy.rotate(function() { 
+    //             logo.run();
+    //             snowflake() 
+    //         }) }, confi.setTime.waitRotate) 
+    // });
 });
